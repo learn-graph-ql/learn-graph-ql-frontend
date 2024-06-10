@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { getBookQuery } from "../queries/queries";
+import BookDetails from "./BookDetails";
 
 const BookList = () => {
   const { loading, error, data } = useQuery(getBookQuery);
-  console.log(data, loading, error);
+  const [selectedBookId, setSelectedBookId] = useState(null);
+
   if (loading) return <p>Loading....</p>;
   if (error) return <p>Something went wrong</p>;
 
@@ -12,10 +14,12 @@ const BookList = () => {
     <div>
       <ul>
         {data.books.map((book, index) => (
-          <li key={index}>{book.name} - {book.genre}</li>
+          <li key={book.id} onClick={() => setSelectedBookId(book.id)}>
+            {book.name} - {book.genre}
+          </li>
         ))}
-        
       </ul>
+      <BookDetails bookId={selectedBookId} />
     </div>
   );
 };
